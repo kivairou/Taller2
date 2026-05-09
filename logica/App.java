@@ -11,48 +11,137 @@ public class App {
 
 	private static Scanner scan;
 	private static ArrayList<Pokemon> pokemones = new ArrayList<>();
+	private static ArrayList<AltoMando> altosMandos = new ArrayList<>();
+	private static ArrayList<Gimnasio> gimnasios = new ArrayList<>();
+	private static ArrayList<String> habitats = new ArrayList<>();
 	public static void main(String[] args) throws FileNotFoundException {
 		
 	
 		
 		leerPokedex();
-		leerGimnasios();
-		leerAltoMando();
-		leerRegistros();
 		leerHabitats();
 	
-		desplegarMenu();
+		desplegarMenuInicial();
 		
 
 	}
-	private static void desplegarMenu() {
-		Scanner scan = new Scanner (System.in);
+	private static void desplegarMenuInicial() throws FileNotFoundException {
+		scan = new Scanner (System.in);
 		int opcion = 0;
 		do {
 		System.out.println("1) Continuar.");
 		System.out.println("2) Nueva Partida.");
 		System.out.println("3) Salir.");
+		System.out.print("Ingrese una opcion: ");
 		opcion = scan.nextInt();
+		scan.nextLine();
 		
 		switch (opcion) {
 		case 1:
+			leerRegistros();
 			break;
 		case 2:
+			leerGimnasios();
+			leerAltoMando();
+			System.out.print("Ingrese su apodo de jugador: ");
+			String nombreJugador = scan.nextLine();
+			Jugador nuevoJugador = new Jugador(nombreJugador);
+			desplegarMenu(nuevoJugador);
 			break;
 		case 3:
-			System.out.println("Nos vemos...");
+			System.out.println("Nos vemos entrenador...");
 			break;
 		default:
-			System.out.println("Opcion no válida");
+			System.out.println("Ingrese una opcion valida!!");
 			break;
 		}
 		}while (opcion !=3);
 		
 	}
+	private static void desplegarMenu(Jugador jugador) {
+		scan = new Scanner(System.in);
+		int opcion = 0;
+		
+		do {
+			System.out.println("1) Revisar equipo.");
+			System.out.println("2) Salir a capturar.");
+			System.out.println("3) Acceso al PC (cambiar Pokemon del equipo).");
+			System.out.println("4) Retar un gimnasio.");
+			System.out.println("5) Desafio al Alto Mando.");
+			System.out.println("6) Curar Pokemon.");
+			System.out.println("7) Guardar.");
+			System.out.println("8) Guardar y Salir.");
+			System.out.print("Ingrese una opcion: ");
+			
+			opcion = scan.nextInt();
+			scan.nextLine();
+			
+			switch(opcion) {
+			case 1:
+				revisarEquipo(jugador);
+				break;
+			case 2:
+				salirCapturar(jugador);
+				break;
+			case 3:
+				accesoPC(jugador);
+				break;
+			case 4:
+				retarGimnasio(jugador);
+				break;
+			case 5:
+				desafioAltoMando(jugador);
+				break;
+			case 6:
+				curarPokemon(jugador);
+				break;
+			case 7:
+				guardarRegistro(jugador);
+				break;
+			case 8:
+				guardarRegistro(jugador);
+				break;
+			default:
+				System.out.println("Ingrese una opcion valida!!");
+				break;
+			}
+		}while(opcion!=8);
+		
+	}
+	private static void guardarRegistro(Jugador j) {
+		// TODO Auto-generated method stub
+		
+	}
+	private static void curarPokemon(Jugador j) {
+		// TODO Auto-generated method stub
+		
+	}
+	private static void desafioAltoMando(Jugador j) {
+		// TODO Auto-generated method stub
+		
+	}
+	private static void retarGimnasio(Jugador j) {
+
+		// TODO Auto-generated method stub
+		
+	}
+	private static void accesoPC(Jugador j) {
+		// TODO Auto-generated method stub
+		
+	}
+	private static void salirCapturar(Jugador j) {
+
+		// TODO Auto-generated method stub
+		
+	}
+	private static void revisarEquipo(Jugador j) {
+		// TODO Auto-generated method stub
+		
+	}
 	private static void leerHabitats() throws FileNotFoundException {
 		File txtHabitats = new File("Habitats.txt");
 		scan = new Scanner(txtHabitats);
-		ArrayList<String> habitats = new ArrayList<>();
+		
 		while (scan.hasNextLine()) {
 			String habitat = scan.nextLine();
 			habitats.add(habitat);
@@ -68,16 +157,26 @@ public class App {
 		scan = new Scanner(txtAltoMando);
 		while (scan.hasNextLine()) {
 			String linea = scan.nextLine();
-			String partes[] = linea.split(";");
+			String[] partes = linea.split(";");
 			
 			int numero = Integer.parseInt(partes[0]);
 			String nombre = partes[1];
-			String pokemon1 = partes[2];
-			String pokemon2 = partes[3];
-			String pokemon3 = partes[4];
-			String pokemon4 = partes[5];
-			String pokemon5 = partes[6];
-			String pokemon6 = partes[7];
+			
+			ArrayList<Pokemon> pokeAltoMando = new ArrayList<>();
+			
+			for(int i = 2; i<partes.length;i++) {
+				String nombrePoke = partes[i];
+				for(Pokemon p: pokemones) {
+					if(p.getNombre().equalsIgnoreCase(nombrePoke)) {
+						pokeAltoMando.add(p);
+					}
+				}
+			}
+			AltoMando nuevoAltoMando = new AltoMando(numero,nombre,pokeAltoMando);
+			altosMandos.add(nuevoAltoMando);
+			
+			
+			
 		}
 		
 		
@@ -87,18 +186,26 @@ public class App {
 		scan = new Scanner(txtGimnasios);
 		while (scan.hasNextLine()) {
 			String linea = scan.nextLine();
-			String partes[] = linea.split(";");
+			String[] partes= linea.split(";");
 			
 			int numero = Integer.parseInt(partes[0]);
 			String nombre = partes[1];
-			boolean estado = Boolean.parseBoolean(partes[2]);
+			String estado = partes[2];
 			int cantidad = Integer.parseInt(partes[3]);
 			
+			ArrayList<Pokemon> pokemonsGim = new ArrayList<>();
+			
 			for (int i = 0; i<cantidad;i++) {
-				String pokemon = partes[i];
-				
+				String nombrePokemon = partes[4+i];
+				for(Pokemon p: pokemones) {
+					if(p.getNombre().equalsIgnoreCase(nombrePokemon)) {
+						pokemonsGim.add(p);
+					}
+				}
 				
 			}
+			Gimnasio nuevoGimnasio = new Gimnasio(numero,nombre,estado,pokemonsGim);
+			gimnasios.add(nuevoGimnasio);
 		}
 		
 	}
