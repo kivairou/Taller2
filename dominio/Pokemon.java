@@ -11,7 +11,7 @@ public class Pokemon {
 	private int defensaEspecial;
 	private int velocidad;
 	private String tipo;
-	private int totalStats;
+	private String estado;
 	
 	public Pokemon(String nombre, String habitat, double porcentajeAparicion, int vida, int ataque, int defensa,
 			int ataqueEspecial, int defensaEspecial, int velocidad, String tipo) {
@@ -26,14 +26,11 @@ public class Pokemon {
 		this.defensaEspecial = defensaEspecial;
 		this.velocidad = velocidad;
 		this.tipo = tipo;
-		totalStats = calcularStats();
+		this.estado = "Vivo";
 	}
 	
-	private int calcularStats() {
-		int total = 0;
-		total += (vida + ataque + defensa + ataqueEspecial + defensaEspecial + velocidad);
-		
-		return total;
+	private int getSumaStats() {
+		return vida + ataque + defensa + ataqueEspecial + defensaEspecial + velocidad;
 	}
 
 	public String getNombre() {
@@ -52,10 +49,18 @@ public class Pokemon {
 		return tipo;
 	}
 
-	public int getTotalStats() {
-		return totalStats;
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public String getEstado() {
+		return estado;
 	}
 	
+	@Override
+	public String toString() {
+		return nombre + "|"+tipo+"|Stats totales: "+getSumaStats();
 	
+	}
 	
 }
