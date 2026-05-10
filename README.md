@@ -39,7 +39,9 @@ El sistema se basa en una arquitectura de capas y utiliza el patrón de diseño 
 ├── Gimnasios.txt             # Datos de los 8 líderes
 ├── Alto Mando.txt            # Datos del desafío final
 ├── Registros.txt             # Archivo de persistencia (Guardado)
-└── README.md                 # Documentación del proyecto
+├── README.md                 # Documentación del proyecto
+├── DiagramaDeClases          # Detalla la implementación técnica en Java
+└── ModeloDeDominio           # Clases que uno las logra ver
 ```
 
 ---
