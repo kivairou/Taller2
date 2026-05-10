@@ -1,29 +1,20 @@
 package logica;
 
-import java.io.File;
+//import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Scanner;
-import dominio.*;
+//import dominio.*;
 
 
 public class App {
 
 	private static Scanner scan;
-	private static ArrayList<Pokemon> pokemones = new ArrayList<>();
-	private static ArrayList<AltoMando> altosMandos = new ArrayList<>();
-	private static ArrayList<Gimnasio> gimnasios = new ArrayList<>();
-	private static ArrayList<String> habitats = new ArrayList<>();
+	private static Sistema sistema = SistemaImpl.getInstancia();
+	
 	public static void main(String[] args) throws FileNotFoundException {
 		
-	
-		
-		leerPokedex();
-		leerHabitats();
-	
 		desplegarMenuInicial();
-		
-
 	}
 	private static void desplegarMenuInicial() throws FileNotFoundException {
 		scan = new Scanner (System.in);
@@ -38,15 +29,18 @@ public class App {
 		
 		switch (opcion) {
 		case 1:
-			leerRegistros();
+			if(sistema.cargarPartida()) {
+				desplegarMenu();
+			}else {
+				System.out.println("No se encontro una partida guardada.");
+			}
 			break;
 		case 2:
-			leerGimnasios();
-			leerAltoMando();
-			System.out.print("Ingrese su apodo de jugador: ");
-			String nombreJugador = scan.nextLine();
-			Jugador nuevoJugador = new Jugador(nombreJugador);
-			desplegarMenu(nuevoJugador);
+			System.out.print("Ingrese Apodo: ");
+			String apodo = scan.nextLine();
+			sistema.nuevaPartida(apodo);
+			System.out.println("Bienvenido "+ apodo+ "!!");
+			desplegarMenu();
 			break;
 		case 3:
 			System.out.println("Nos vemos entrenador...");
@@ -58,12 +52,12 @@ public class App {
 		}while (opcion !=3);
 		
 	}
-	private static void desplegarMenu(Jugador jugador) {
+	private static void desplegarMenu() {
 		scan = new Scanner(System.in);
 		int opcion = 0;
 		
 		do {
-			System.out.println("1) Revisar equipo.");
+			System.out.println("\n1) Revisar equipo.");
 			System.out.println("2) Salir a capturar.");
 			System.out.println("3) Acceso al PC (cambiar Pokemon del equipo).");
 			System.out.println("4) Retar un gimnasio.");
@@ -78,28 +72,65 @@ public class App {
 			
 			switch(opcion) {
 			case 1:
-				revisarEquipo(jugador);
+				sistema.revisarEquipo();
 				break;
 			case 2:
-				salirCapturar(jugador);
+				System.out.println("\nDonde deseas ir a explorar?");
+				System.out.println("\nZonas disponibles:");
+				System.out.println("1) Lago");
+				System.out.println("2) Cueva");
+				System.out.println("3) Montaña");
+				System.out.println("4) Bosque");
+				System.out.println("5) Prado");
+				System.out.println("6) Mar");
+				System.out.println("7) Volver al menu.");
+				System.out.print("Ingrese Zona: ");
+				try {
+					
+					int zona = scan.nextInt();
+					scan.nextLine();
+				
+					if(zona!=7) {
+						sistema.capturarPokemon(zona);
+					}
+				}catch(Exception e) {
+					System.out.println("Zona no valida.");
+				}
 				break;
 			case 3:
-				accesoPC(jugador);
+				sistema.revisarEquipo();
+				System.out.println("1) Cambiar pokemon");
+				System.out.println("2) Salir");
+				
+				if(scan.nextLine().equals("1")) {
+					System.out.print("Posicion del primer pokemon: ");
+					int p1 = Integer.parseInt(scan.nextLine());
+					System.out.print("Posicion del segundo pokemon: ");
+					int p2 = Integer.parseInt(scan.nextLine());
+					sistema.accesoPC(p1-1, p2-1);
+				}
 				break;
 			case 4:
-				retarGimnasio(jugador);
+				System.out.print("A que numero de gimnasio deseas retar?(1-8): ");
+				try {
+					int numGimnasio = Integer.parseInt(scan.nextLine());
+					sistema.combatirGimnasio(numGimnasio);
+				}catch(Exception e) {
+					System.out.println("Numero invalido...");
+				}
 				break;
 			case 5:
-				desafioAltoMando(jugador);
+				
 				break;
 			case 6:
-				curarPokemon(jugador);
+				sistema.curarEquipo();
 				break;
 			case 7:
-				guardarRegistro(jugador);
+				sistema.guardarPartida();
 				break;
 			case 8:
-				guardarRegistro(jugador);
+				sistema.guardarPartida();
+				System.out.println("Cerrando partida...");
 				break;
 			default:
 				System.out.println("Ingrese una opcion valida!!");
@@ -108,37 +139,8 @@ public class App {
 		}while(opcion!=8);
 		
 	}
-	private static void guardarRegistro(Jugador j) {
-		// TODO Auto-generated method stub
-		
-	}
-	private static void curarPokemon(Jugador j) {
-		// TODO Auto-generated method stub
-		
-	}
-	private static void desafioAltoMando(Jugador j) {
-		// TODO Auto-generated method stub
-		
-	}
-	private static void retarGimnasio(Jugador j) {
 
-		// TODO Auto-generated method stub
-		
-	}
-	private static void accesoPC(Jugador j) {
-		// TODO Auto-generated method stub
-		
-	}
-	private static void salirCapturar(Jugador j) {
-
-		// TODO Auto-generated method stub
-		
-	}
-	private static void revisarEquipo(Jugador j) {
-		// TODO Auto-generated method stub
-		
-	}
-	private static void leerHabitats() throws FileNotFoundException {
+	/*private static void leerHabitats() throws FileNotFoundException {
 		File txtHabitats = new File("Habitats.txt");
 		scan = new Scanner(txtHabitats);
 		
@@ -209,31 +211,31 @@ public class App {
 		}
 		
 	}
-	private static void leerPokedex() throws FileNotFoundException {
-		File txtPokedex = new File("Pokedex.txt");
-		scan = new Scanner(txtPokedex);
-		while (scan.hasNextLine()) {
-		String linea = scan.nextLine();
-		String partes[] = linea.split(";");
+	//private static void leerPokedex() throws FileNotFoundException {
+	//	File txtPokedex = new File("Pokedex.txt");
+	//	scan = new Scanner(txtPokedex);
+	//	while (scan.hasNextLine()) {
+	//	String linea = scan.nextLine();
+	//	String partes[] = linea.split(";");
 		
-		String nombre = partes[0];
-		String habitat = partes[1];
-		double porcentaje = Double.parseDouble(partes[2]);
-		int vida = Integer.parseInt(partes[3]);
-		int ataque = Integer.parseInt(partes[4]);
-		int defensa = Integer.parseInt(partes[5]);
-		int ataqueEspecial = Integer.parseInt(partes[6]);
-		int defensaEspecial = Integer.parseInt(partes[7]);
-		int velocidad = Integer.parseInt(partes[8]);
-		String tipo = partes[9];
+	//	String nombre = partes[0];
+	//	String habitat = partes[1];
+	//	double porcentaje = Double.parseDouble(partes[2]);
+	//	int vida = Integer.parseInt(partes[3]);
+	//	int ataque = Integer.parseInt(partes[4]);
+	//	int defensa = Integer.parseInt(partes[5]);
+	//	int ataqueEspecial = Integer.parseInt(partes[6]);
+	//	int defensaEspecial = Integer.parseInt(partes[7]);
+	//	int velocidad = Integer.parseInt(partes[8]);
+	//	String tipo = partes[9];
 		
-		Pokemon nuevoPokemon = new Pokemon(nombre,habitat,porcentaje,vida,ataque,defensa,ataqueEspecial,defensaEspecial,velocidad,tipo);
+	//	Pokemon nuevoPokemon = new Pokemon(nombre,habitat,porcentaje,vida,ataque,defensa,ataqueEspecial,defensaEspecial,velocidad,tipo);
 		
-		pokemones.add(nuevoPokemon);
+	//	pokemones.add(nuevoPokemon);
 		
 		
-		}
+	//	}
 		
-	}
+	}*/
 
 }
