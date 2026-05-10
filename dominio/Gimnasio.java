@@ -35,6 +35,7 @@ public class Gimnasio {
 	public ArrayList<Pokemon> getPokemons() {
 		return pokemons;
 	}
+
 	
 	
 	

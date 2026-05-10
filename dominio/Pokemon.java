@@ -29,7 +29,7 @@ public class Pokemon {
 		this.estado = "Vivo";
 	}
 	
-	private int getSumaStats() {
+	public int getSumaStats() {
 		return vida + ataque + defensa + ataqueEspecial + defensaEspecial + velocidad;
 	}
 
@@ -61,6 +61,11 @@ public class Pokemon {
 	public String toString() {
 		return nombre + "|"+tipo+"|Stats totales: "+getSumaStats();
 	
+	}
+
+	public Pokemon clonar() {
+		
+		return new Pokemon(this.nombre,this.habitat,this.porcentajeAparicion,this.vida,this.ataque,this.defensa,this.ataqueEspecial,this.defensaEspecial,this.velocidad,this.tipo);
 	}
 	
 }
