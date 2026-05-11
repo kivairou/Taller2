@@ -1,10 +1,15 @@
+// Tomás Ignacio Zepeda Velasquez | 21789061-6 | ICCI
+// Kevin Matias Mauricio Zamora Riquelme | 21578521-1 | ICCI
+
+
+
 package logica;
 
-//import java.io.File;
+
 import java.io.FileNotFoundException;
-//import java.util.ArrayList;
+
 import java.util.Scanner;
-//import dominio.*;
+
 
 
 public class App {
@@ -99,8 +104,9 @@ public class App {
 				break;
 			case 3:
 				sistema.revisarEquipo();
-				System.out.println("1) Cambiar pokemon");
+				System.out.println("\n1) Cambiar pokemon");
 				System.out.println("2) Salir");
+				System.out.print("Ingrese una opcion: ");
 				
 				if(scan.nextLine().equals("1")) {
 					System.out.print("Posicion del primer pokemon: ");
@@ -120,7 +126,7 @@ public class App {
 				}
 				break;
 			case 5:
-				
+				sistema.combatirAltoMando();
 				break;
 			case 6:
 				sistema.curarEquipo();
@@ -140,102 +146,14 @@ public class App {
 		
 	}
 
-	/*private static void leerHabitats() throws FileNotFoundException {
-		File txtHabitats = new File("Habitats.txt");
-		scan = new Scanner(txtHabitats);
-		
-		while (scan.hasNextLine()) {
-			String habitat = scan.nextLine();
-			habitats.add(habitat);
-		}
-		
-	}
-	private static void leerRegistros() {
-		// TODO Auto-generated method stub
-		
-	}
-	private static void leerAltoMando() throws FileNotFoundException {
-		File txtAltoMando = new File("AltoMando.txt");
-		scan = new Scanner(txtAltoMando);
-		while (scan.hasNextLine()) {
-			String linea = scan.nextLine();
-			String[] partes = linea.split(";");
-			
-			int numero = Integer.parseInt(partes[0]);
-			String nombre = partes[1];
-			
-			ArrayList<Pokemon> pokeAltoMando = new ArrayList<>();
-			
-			for(int i = 2; i<partes.length;i++) {
-				String nombrePoke = partes[i];
-				for(Pokemon p: pokemones) {
-					if(p.getNombre().equalsIgnoreCase(nombrePoke)) {
-						pokeAltoMando.add(p);
-					}
-				}
-			}
-			AltoMando nuevoAltoMando = new AltoMando(numero,nombre,pokeAltoMando);
-			altosMandos.add(nuevoAltoMando);
-			
-			
-			
-		}
-		
-		
-	}
-	private static void leerGimnasios() throws FileNotFoundException {
-		File txtGimnasios = new File("Gimnasios.txt");
-		scan = new Scanner(txtGimnasios);
-		while (scan.hasNextLine()) {
-			String linea = scan.nextLine();
-			String[] partes= linea.split(";");
-			
-			int numero = Integer.parseInt(partes[0]);
-			String nombre = partes[1];
-			String estado = partes[2];
-			int cantidad = Integer.parseInt(partes[3]);
-			
-			ArrayList<Pokemon> pokemonsGim = new ArrayList<>();
-			
-			for (int i = 0; i<cantidad;i++) {
-				String nombrePokemon = partes[4+i];
-				for(Pokemon p: pokemones) {
-					if(p.getNombre().equalsIgnoreCase(nombrePokemon)) {
-						pokemonsGim.add(p);
-					}
-				}
-				
-			}
-			Gimnasio nuevoGimnasio = new Gimnasio(numero,nombre,estado,pokemonsGim);
-			gimnasios.add(nuevoGimnasio);
-		}
-		
-	}
-	//private static void leerPokedex() throws FileNotFoundException {
-	//	File txtPokedex = new File("Pokedex.txt");
-	//	scan = new Scanner(txtPokedex);
-	//	while (scan.hasNextLine()) {
-	//	String linea = scan.nextLine();
-	//	String partes[] = linea.split(";");
-		
-	//	String nombre = partes[0];
-	//	String habitat = partes[1];
-	//	double porcentaje = Double.parseDouble(partes[2]);
-	//	int vida = Integer.parseInt(partes[3]);
-	//	int ataque = Integer.parseInt(partes[4]);
-	//	int defensa = Integer.parseInt(partes[5]);
-	//	int ataqueEspecial = Integer.parseInt(partes[6]);
-	//	int defensaEspecial = Integer.parseInt(partes[7]);
-	//	int velocidad = Integer.parseInt(partes[8]);
-	//	String tipo = partes[9];
-		
-	//	Pokemon nuevoPokemon = new Pokemon(nombre,habitat,porcentaje,vida,ataque,defensa,ataqueEspecial,defensaEspecial,velocidad,tipo);
-		
-	//	pokemones.add(nuevoPokemon);
-		
-		
-	//	}
-		
-	}*/
 
-}
+		
+	
+	
+
+	
+		
+		
+	}
+	
+		

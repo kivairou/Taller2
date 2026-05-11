@@ -25,20 +25,24 @@ public class SistemaImpl implements Sistema{
 	private Random random;
 	private static Scanner scan;
 	
-	private SistemaImpl() {
+	private SistemaImpl()  {
 		this.pokemones = new ArrayList<>();
 		this.gimnasios = new ArrayList<>();
 		this.altosMandos = new ArrayList<>();
 		this.habitats = new ArrayList<>();
 		this.random = new Random();
 		
-		cargarHabitats();
-		cargarPokedex();
-		cargarGimnasios();
-		cargarAltosMandos();
+		try {
+			cargarHabitats();
+			cargarPokedex();
+			cargarGimnasios();
+			cargarAltosMandos();
+		}catch(Exception e) {
+			System.out.println("Algun documento no se pudo cargar correctamente.");
+		}
 	}
 
-	public static SistemaImpl getInstancia() {
+	public static SistemaImpl getInstancia()  {
 		if (instancia == null) {
 			instancia = new SistemaImpl();
 		}
@@ -55,25 +59,109 @@ public class SistemaImpl implements Sistema{
 		return null;
 	}
 	
-	private void cargarAltosMandos() {
-		// TODO Auto-generated method stub
+	private void cargarAltosMandos() throws FileNotFoundException {
+		
+		File txtAltoMando = new File("Alto Mando.txt");
+		scan = new Scanner(txtAltoMando);
+		while (scan.hasNextLine()) {
+			String linea = scan.nextLine();
+			String[] partes = linea.split(";");
+			
+			int numero = Integer.parseInt(partes[0]);
+			String nombre = partes[1];
+			
+			ArrayList<Pokemon> pokeAltoMando = new ArrayList<>();
+			
+			for(int i = 2; i<partes.length;i++) {
+				String nombrePoke = partes[i];
+				for(Pokemon p: pokemones) {
+					if(p.getNombre().equalsIgnoreCase(nombrePoke)) {
+						pokeAltoMando.add(p);
+					}
+				}
+			}
+			AltoMando nuevoAltoMando = new AltoMando(numero,nombre,pokeAltoMando);
+			altosMandos.add(nuevoAltoMando);
+			
+			
+			
+		}
+		
+		
+	}
+		
+	
+
+	private void cargarGimnasios() throws FileNotFoundException {
+		File txtGimnasios = new File("Gimnasios.txt");
+		scan = new Scanner(txtGimnasios);
+		while (scan.hasNextLine()) {
+			String linea = scan.nextLine();
+			String[] partes= linea.split(";");
+			
+			int numero = Integer.parseInt(partes[0]);
+			String nombre = partes[1];
+			String estado = partes[2];
+			int cantidad = Integer.parseInt(partes[3]);
+			
+			ArrayList<Pokemon> pokemonsGim = new ArrayList<>();
+			
+			for (int i = 0; i<cantidad;i++) {
+				String nombrePokemon = partes[4+i];
+				for(Pokemon p: pokemones) {
+					if(p.getNombre().equalsIgnoreCase(nombrePokemon)) {
+						pokemonsGim.add(p);
+					}
+				}
+				
+			}
+			Gimnasio nuevoGimnasio = new Gimnasio(numero,nombre,estado,pokemonsGim);
+			gimnasios.add(nuevoGimnasio);
+		}
 		
 	}
 
-	private void cargarGimnasios() {
-		// TODO Auto-generated method stub
+	private void cargarHabitats() throws FileNotFoundException {
+		File txtHabitats = new File("Habitats.txt");
+		scan = new Scanner(txtHabitats);
+		
+		while (scan.hasNextLine()) {
+			String habitat = scan.nextLine();
+			habitats.add(habitat);
+		}
 		
 	}
 
-	private void cargarHabitats() {
-		// TODO Auto-generated method stub
+	private void cargarPokedex() throws FileNotFoundException {
+		File txtPokedex = new File("Pokedex.txt");
+		scan = new Scanner(txtPokedex);
+		while (scan.hasNextLine()) {
+		String linea = scan.nextLine();
+		String partes[] = linea.split(";");
+		
+		String nombre = partes[0];
+		String habitat = partes[1];
+		double porcentaje = Double.parseDouble(partes[2]);
+		int vida = Integer.parseInt(partes[3]);
+		int ataque = Integer.parseInt(partes[4]);
+		int defensa = Integer.parseInt(partes[5]);
+		int ataqueEspecial = Integer.parseInt(partes[6]);
+		int defensaEspecial = Integer.parseInt(partes[7]);
+		int velocidad = Integer.parseInt(partes[8]);
+		String tipo = partes[9];
+		
+		Pokemon nuevoPokemon = new Pokemon(nombre,habitat,porcentaje,vida,ataque,defensa,ataqueEspecial,defensaEspecial,velocidad,tipo);
+		
+		pokemones.add(nuevoPokemon);
+		
+		
+		}
 		
 	}
 
-	private void cargarPokedex() {
-		// TODO Auto-generated method stub
+
 		
-	}
+	
 
 	@Override
 	public void nuevaPartida(String nombre) {
@@ -96,7 +184,7 @@ public class SistemaImpl implements Sistema{
 				Pokemon buscarPoke = buscarPokemon(partes2[0]);
 				if(buscarPoke != null) {
 					Pokemon nuevoPoke = buscarPoke.clonar();
-					nuevoPoke.setEstado(partes2[2]);
+					nuevoPoke.setEstado(partes2[1]);
 					jugador.getPokemons().add(nuevoPoke);
 				}
 			}
@@ -152,26 +240,30 @@ public class SistemaImpl implements Sistema{
 			System.out.println("\nQue deseas hacer?");
 			System.out.println("\n1) Capturar");
 			System.out.println("2) Huir");
+			System.out.print("Ingrese una opcion: ");
 			
 			if(scan.nextLine().equals("1")) {
 				boolean loTiene = false;
 				for(Pokemon p: jugador.getPokemons()) {
 					if(p.getNombre().equalsIgnoreCase(encontrado.getNombre())) {
 						loTiene = true;
-					}
-					
-					if(loTiene) {
-						System.out.println("Ya has capturado a este pokemon");
-					} else {
-						jugador.getPokemons().add(encontrado.clonar());
-						System.out.println(encontrado.getNombre()+ " capturado con exito!!");
-						System.out.println(encontrado.getNombre()+ " ha sido agregado a tu equipo!");
+						break;
 					}
 				}
+				if(loTiene) {
+					System.out.println("Ya has capturado a este pokemon");
+				} else {
+					jugador.getPokemons().add(encontrado.clonar());
+					System.out.println(encontrado.getNombre()+ " capturado con exito!!");
+					System.out.println(encontrado.getNombre()+ " ha sido agregado a tu equipo!");
+				}
+				}
+			} else {
+				System.out.println("No ha aparecido ningun pokemon");
 			}
 		}
 		
-	}
+	
 
 	@Override
 	public void accesoPC(int i, int j) {
@@ -232,7 +324,7 @@ public class SistemaImpl implements Sistema{
 	        System.out.println("\n" + nombreRival + " saca a " + rival.getNombre());
 	        System.out.println(jugador.getNombre()+" saca a "+miPkmn.getNombre());
 
-	        System.out.print("\nQue deseas hacer?");
+	        System.out.println("\nQue deseas hacer?");
 	        System.out.println("1) Atacar");
 	        System.out.println("2) Cambiar de pokemon");
 	        System.out.println("3) Rendirse");
@@ -295,7 +387,7 @@ public class SistemaImpl implements Sistema{
 	
 
 	@Override
-	public void combatirAltoMando(int altoMando) {
+	public void combatirAltoMando() {
 		// Validar que tenga las 8 medallas
 	    if (jugador.getMedallas() < 8) {
 	        System.out.println("No tienes suficientes medallas para el Alto Mando.");

@@ -9,7 +9,7 @@ public interface Sistema {
 	void capturarPokemon(int habitat);
 	void accesoPC(int i, int j);
 	void combatirGimnasio(int gimnasio);
-	void combatirAltoMando(int altoMando);
+	void combatirAltoMando();
 	void curarEquipo();
 	void guardarPartida();
 	
